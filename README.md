@@ -22,15 +22,38 @@ npm install modalx zustand
 
 ### 1. Configure Vite
 
-Add the plugin to your `vite.config.ts` to ensure modals are discovered:
+To enable automatic type generation and modal discovery, add the `modalTypesPlugin` to your `vite.config.ts`. This plugin automatically scans for `.mdl.tsx` files and generates type definitions for `openModal`.
 
 ```typescript
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { modalTypesPlugin } from 'modalx/components/modalxPlugin';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    modalTypesPlugin()
+  ],
 })
+```
+
+## Type Safety
+
+The Vite plugin automatically generates `FileNameEnums.ts`. This provides:
+- **Autocomplete**: Modal names are suggested when calling `openModal`.
+- **Return Type Safety**: If you export a `type ReturnType` from your modal file, `openModal` will correctly infer the promise resolution type.
+
+Example modal with type safety:
+
+```tsx
+// Profile.mdl.tsx
+export type ReturnType = { userId: string; status: 'updated' | 'cancelled' };
+
+const ProfileModal = ({ close }) => {
+  return <button onClick={() => close({ userId: '123', status: 'updated' })}>Save</button>;
+};
+
+export default ProfileModal;
 ```
 
 ### 2. Add the Modal Root

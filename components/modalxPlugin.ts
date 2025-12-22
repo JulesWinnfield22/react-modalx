@@ -36,7 +36,7 @@ export function modalTypesPlugin(_options = {}): Plugin {
     apply: "serve",
     configResolved(config) {
       rootPath = config.root;
-      outFile = path.resolve(rootPath, "src/components/new_modal_2.0/FileNameEnums.ts");
+      outFile = path.resolve(rootPath, "components/FileNameEnums.ts");
     },
     configureServer(server: ViteDevServer) {
       const generateTypes = () => {
