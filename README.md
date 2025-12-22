@@ -50,10 +50,21 @@ Example modal with type safety:
 export type ReturnType = { userId: string; status: 'updated' | 'cancelled' };
 
 const ProfileModal = ({ close }) => {
-  return <button onClick={() => close({ userId: '123', status: 'updated' })}>Save</button>;
+  return (
+    <button onClick={() => close({ userId: '123', status: 'updated' })}>
+      Save Profile
+    </button>
+  );
 };
 
 export default ProfileModal;
+```
+
+On the usage side, the `result` will be automatically typed:
+
+```tsx
+// The 'result' variable here is typed as { userId: string; status: 'updated' | 'cancelled' }
+const result = await openModal('Profile'); 
 ```
 
 ### 2. Add the Modal Root
