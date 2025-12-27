@@ -13,6 +13,16 @@ export interface ModalRegistry {
    * @see {@link file:///home/edi/Documents/workbeanch/new_work/raaz/src/modals/Test.amdl.tsx}
    */
   'Test': ReturnType_Test;
+  /** 
+   * @source src/routes/shipper/(my-contact)/-components/AddCarrier.amdl.tsx
+   * @see {@link file:///home/edi/Documents/workbeanch/new_work/raaz/src/routes/shipper/(my-contact)/-components/AddCarrier.amdl.tsx}
+   */
+  'AddCarrier': any;
+  /** 
+   * @source src/routes/shipper/(my-contact)/-components/EditCarrier.amdl.tsx
+   * @see {@link file:///home/edi/Documents/workbeanch/new_work/raaz/src/routes/shipper/(my-contact)/-components/EditCarrier.amdl.tsx}
+   */
+  'EditCarrier': any;
 }
 
   /** 
@@ -26,6 +36,18 @@ export type ConfirmationModal = 'ConfirmationModal';
    * @see {@link file:///home/edi/Documents/workbeanch/new_work/raaz/src/modals/Test.amdl.tsx}
    */
 export type Test = 'Test';
+
+  /** 
+   * @source src/routes/shipper/(my-contact)/-components/AddCarrier.amdl.tsx
+   * @see {@link file:///home/edi/Documents/workbeanch/new_work/raaz/src/routes/shipper/(my-contact)/-components/AddCarrier.amdl.tsx}
+   */
+export type AddCarrier = 'AddCarrier';
+
+  /** 
+   * @source src/routes/shipper/(my-contact)/-components/EditCarrier.amdl.tsx
+   * @see {@link file:///home/edi/Documents/workbeanch/new_work/raaz/src/routes/shipper/(my-contact)/-components/EditCarrier.amdl.tsx}
+   */
+export type EditCarrier = 'EditCarrier';
 
 /**
  * Constant object for all modal names.
@@ -42,6 +64,16 @@ export const MODALS = {
    * @see {@link file:///home/edi/Documents/workbeanch/new_work/raaz/src/modals/Test.amdl.tsx}
    */
   Test: 'Test' as Test,
+  /** 
+   * @source src/routes/shipper/(my-contact)/-components/AddCarrier.amdl.tsx
+   * @see {@link file:///home/edi/Documents/workbeanch/new_work/raaz/src/routes/shipper/(my-contact)/-components/AddCarrier.amdl.tsx}
+   */
+  AddCarrier: 'AddCarrier' as AddCarrier,
+  /** 
+   * @source src/routes/shipper/(my-contact)/-components/EditCarrier.amdl.tsx
+   * @see {@link file:///home/edi/Documents/workbeanch/new_work/raaz/src/routes/shipper/(my-contact)/-components/EditCarrier.amdl.tsx}
+   */
+  EditCarrier: 'EditCarrier' as EditCarrier,
 } as const;
 
-export type FileNames = ConfirmationModal | Test;
+export type FileNames = ConfirmationModal | Test | AddCarrier | EditCarrier;

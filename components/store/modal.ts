@@ -30,16 +30,23 @@ export interface ModalItem {
 interface ModalStoreState {
 	modals: ModalItem[];
 	loadedComponents: Record<string, React.LazyExoticComponent<any> | React.ComponentType<any>>;
+	modules: Record<string, any>; // Add modules to store
 
 	openModal: (modalToOpen: FileNames, data?: any, options?: ModalOptions) => Promise<any>;
 	closeModal: (response?: any, sendResponse?: boolean) => void;
 	getModal: (name: string) => ModalItem | undefined;
 	loadComponent: (name: string) => void;
+	setModules: (modules: Record<string, any>) => void; // Action to update modules
 }
 
-export const useModalStore = create<ModalStoreState>((set, get) => ({
+const storeName = '__MODAL_STORE__';
+const _global = globalThis as any;
+
+// If store exists, reuse it. Otherwise create definition.
+const createStore = () => create<ModalStoreState>((set, get) => ({
 	modals: [],
 	loadedComponents: {},
+	modules: modalModules, // Initialize with current modules
 
 	openModal: (modalToOpen, data, options) => {
 		return new Promise((resolve) => {
@@ -94,9 +101,11 @@ export const useModalStore = create<ModalStoreState>((set, get) => ({
 	loadComponent: (name) => {
 		if (get().loadedComponents[name]) return;
 
+		const modules = get().modules; // Use store's modules
+
 		// Find module path by name
 		// Assumes filename is like "Name.mdl.tsx" or "Name.amdl.tsx"
-		const path = Object.keys(modalModules).find((p) => {
+		const path = Object.keys(modules).find((p) => {
 			// p might be /path/to/MyModal.mdl.tsx
 			const parts = p.split('/');
 			const filename = parts[parts.length - 1]; // MyModal.mdl.tsx
@@ -105,7 +114,7 @@ export const useModalStore = create<ModalStoreState>((set, get) => ({
 		});
 
 		if (path) {
-			const importFn = modalModules[path] as () => Promise<{ default: React.ComponentType<any> }>;
+			const importFn = modules[path] as () => Promise<{ default: React.ComponentType<any> }>;
 			const LazyComp = React.lazy(importFn);
 			set(state => ({
 				loadedComponents: { ...state.loadedComponents, [name]: LazyComp }
@@ -113,5 +122,21 @@ export const useModalStore = create<ModalStoreState>((set, get) => ({
 		} else {
 			console.warn(`[Modal] Component for "${name}" not found.`);
 		}
-	}
+	},
+
+	setModules: (modules) => set({ modules })
 }));
+
+// Singleton logic
+export let useModalStore: ReturnType<typeof createStore>;
+
+if (_global[storeName]) {
+	// Store exists, reuse the hook
+	useModalStore = _global[storeName];
+	// Update the modules reference in the existing store!!
+	useModalStore.getState().setModules(modalModules);
+} else {
+	// New store
+	useModalStore = createStore();
+	_global[storeName] = useModalStore;
+}
