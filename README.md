@@ -69,6 +69,33 @@ On the usage side, the `result` will be automatically typed:
 const result = await openModal('Profile'); 
 ```
 
+### Type Safety for Props
+
+You can also enforce type safety for the props passed to the modal by exporting a `type Props` or `interface Props`.
+
+```tsx
+// Alert.mdl.tsx
+export type Props = {
+  message: string;
+  type: 'success' | 'error';
+};
+
+const AlertModal = ({ data, close }: { data: Props, close: any }) => {
+  return <div className={data.type}>{data.message}</div>;
+};
+export default AlertModal;
+```
+
+When opening the modal, TypeScript will require the correct data:
+
+```tsx
+// ✅ Correct
+openModal('Alert', { message: 'Success!', type: 'success' });
+
+// ❌ Error: Property 'type' is missing
+openModal('Alert', { message: 'Missing type' });
+```
+
 ### 2. Add the Modal Root
 
 Place the `Modal` component at the root of your application (e.g., in `App.tsx` or `main.tsx`):
