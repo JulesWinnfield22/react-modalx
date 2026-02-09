@@ -5,6 +5,8 @@ A lightweight, dynamic React modal library powered by Zustand. ModalX allows you
 ## Features
 
 - 🚀 **Dynamic Loading**: Modals are loaded on-demand using `import.meta.glob`.
+- ⚡ **Lazy Loading**: Use `.amdl.tsx` for code-split, lazy-loaded modals.
+- 📦 **Eager Loading**: Use `.mdl.tsx` for critical modals bundled with the app.
 - 📚 **Stacked Modals**: Open multiple modals on top of each other.
 - 🗄️ **Global State**: Managed by Zustand, no need for complex context providers.
 - ♿ **Accessibility**: Built-in focus trapping and escape key support.
@@ -22,7 +24,7 @@ npm install modalx zustand
 
 ### 1. Configure Vite
 
-To enable automatic type generation and modal discovery, add the `modalTypesPlugin` to your `vite.config.ts`. This plugin automatically scans for `.mdl.tsx` files and generates type definitions for `openModal`.
+To enable automatic type generation and modal discovery, add the `modalTypesPlugin` to your `vite.config.ts`. This plugin automatically scans for `.mdl.tsx` and `.amdl.tsx` files and generates type definitions for `openModal`.
 
 ```typescript
 import { defineConfig } from 'vite';
@@ -101,6 +103,19 @@ const LoginModal = ({ data, close }) => {
 };
 
 export default LoginModal;
+```
+
+### 4. Lazy Loading Modals
+
+To lazy load a modal, simply use the `.amdl.tsx` extension instead of `.mdl.tsx`.
+- **`.mdl.tsx`**: Eagerly loaded. Bundled with the main application. Use for critical modals (e.g., Login, Alert).
+- **`.amdl.tsx`**: Lazily loaded. Fetched only when `openModal` is called. Use for heavy or detailed modals (e.g., Settings, ProfileEditor).
+
+The usage remains exactly the same:
+
+```tsx
+// This works for both .mdl.tsx and .amdl.tsx files!
+await openModal('ProfileEditor', { userId: 123 });
 ```
 
 ## Usage
