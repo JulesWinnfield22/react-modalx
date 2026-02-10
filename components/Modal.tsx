@@ -1,4 +1,5 @@
 
+
 import { useEffect, Suspense, useRef } from 'react';
 import { useModalStore } from './store/modal';
 import ModalParent from './ModalParent';
@@ -8,7 +9,6 @@ import './style.css';
 const Modal = () => {
 	const { modals, loadedComponents } = useModalStore();
 	const rootRef = useRef<HTMLDivElement>(null);
-
 	// Initial load of all available modals (optional pre-loading)
 	// In this design, we load on demand in openModal, but we could pre-load here.
 
@@ -36,10 +36,10 @@ const Modal = () => {
 			// But we know the active one has class __active
 			const activeEl = rootRef.current?.querySelector('.__active');
 			if (activeEl) {
-				const focusableSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+				const focusableSelector = '[data-name], input, select, textarea, button, [href], [tabindex]:not([tabindex="-1"])';
 				const focusables = activeEl.querySelectorAll(focusableSelector);
 				const first = focusables[0] as HTMLElement;
-				const input = Array.from(focusables).find(el => ['INPUT', 'TEXTAREA', 'SELECT'].includes(el.nodeName)) as HTMLElement;
+				const input = Array.from(focusables).find(el => ['DIV', 'INPUT', 'TEXTAREA', 'SELECT'].includes(el.nodeName)) as HTMLElement;
 
 				if (input) input.focus();
 				else if (first) first.focus();

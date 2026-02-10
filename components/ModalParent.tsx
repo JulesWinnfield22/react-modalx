@@ -36,9 +36,6 @@ const ModalParent: React.FC<ModalParentProps> = ({ modal, children }) => {
 		<div
 			onClick={handleOverlayClick}
 			className={`__modal ${!active ? '__inactive' : '__active'}`}
-			style={{
-				display: !active ? 'none' : 'block' // Or handled by z-index/pointer-events in CSS
-			}}
 		>
 			{children}
 		</div>
@@ -46,3 +43,7 @@ const ModalParent: React.FC<ModalParentProps> = ({ modal, children }) => {
 };
 
 export default ModalParent;
+
+// style={{
+// display: !active ? 'none' : 'block' // Or handled by z-index/pointer-events in CSS
+//}}

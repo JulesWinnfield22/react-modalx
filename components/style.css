@@ -1,5 +1,5 @@
 .__modal-parent * {
-  overscroll-behavior: none;
+  overscroll-behavior: auto;
   box-sizing: border-box;
 }
 
@@ -9,7 +9,7 @@
   z-index: 500;
   width: 100%;
   height: 100vh;
-  overscroll-behavior: none;
+  overscroll-behavior: auto;
   overflow: auto;
 }
 
@@ -33,4 +33,9 @@
 
 .__active {
   z-index: 501;
+}
+
+.filter-sort-modal {
+  background: linear-gradient(180deg, rgba(249, 249, 249, 0.24) 0%, rgba(249, 249, 249, 0.8) 17.06%, #F9F9F9 100%);
+
 }

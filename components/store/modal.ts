@@ -4,13 +4,18 @@ import type { FileNames } from '../FileNameEnums';
 
 // Dynamically import all modal and spinner files
 // We look for .mdl.tsx/jsx for modals
-const modalModules = import.meta.glob([
-	'/**/*.(mdl|amdl).(t|j)sx',
+const eagerModules = import.meta.glob([
+	'/**/*.(mdl).(t|j)sx',
+	'!**/node_modules/**'
+], { eager: true });
+
+
+const lazyModules = import.meta.glob([
+	'/**/*.(amdl).(t|j)sx',
 	'!**/node_modules/**'
 ]);
 
-// We look for .s.tsx/jsx for spinners if needed
-// const spinnerModules = import.meta.glob([ ... ]);
+const modalModules = { ...eagerModules, ...lazyModules };
 
 export interface ModalOptions {
 	closeOnOverlayClick?: boolean;
@@ -109,16 +114,26 @@ const createStore = () => create<ModalStoreState>((set, get) => ({
 			// p might be /path/to/MyModal.mdl.tsx
 			const parts = p.split('/');
 			const filename = parts[parts.length - 1]; // MyModal.mdl.tsx
-			const simpleName = filename.split('.')[0]; // MyModal
+			const simpleName = filename.replace(/\.(mdl|amdl)\.(t|j)sx$/, '');
 			return simpleName === name;
 		});
 
 		if (path) {
-			const importFn = modules[path] as () => Promise<{ default: React.ComponentType<any> }>;
-			const LazyComp = React.lazy(importFn);
-			set(state => ({
-				loadedComponents: { ...state.loadedComponents, [name]: LazyComp }
-			}));
+			const mod = modules[path];
+			// Check if it is a module with default export (Eager) or a promise function (Lazy)
+			if (typeof mod === 'function') {
+				const importFn = mod as () => Promise<{ default: React.ComponentType<any> }>;
+				const LazyComp = React.lazy(importFn);
+				set(state => ({
+					loadedComponents: { ...state.loadedComponents, [name]: LazyComp }
+				}));
+			} else {
+				// Eager loaded module
+				const Comp = (mod as { default: React.ComponentType<any> }).default;
+				set(state => ({
+					loadedComponents: { ...state.loadedComponents, [name]: Comp }
+				}));
+			}
 		} else {
 			console.warn(`[Modal] Component for "${name}" not found.`);
 		}

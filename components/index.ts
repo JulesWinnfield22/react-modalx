@@ -1,4 +1,4 @@
-import type { FileNames, ModalRegistry, ModalPropsRegistry } from './FileNameEnums';
+import type { FileNames, ModalRegistry } from './FileNameEnums';
 import Modal from './Modal';
 import ModalParent from './ModalParent';
 import { useModalStore, type ModalOptions } from './store/modal';
@@ -11,7 +11,7 @@ import { useModalStore, type ModalOptions } from './store/modal';
  * @param {Object} options - Optional options
  * @returns {Promise<any>} A promise that resolves with the response from the modal.
  */
-const openModal = <K extends FileNames>(modalToOpen: K, data?: ModalPropsRegistry[K], options?: ModalOptions): Promise<ModalRegistry[K]> => {
+const openModal = <K extends FileNames>(modalToOpen: K, data?: ModalRegistry[K]['Props']['data'], options?: ModalOptions): Promise<ModalRegistry[K]['ReturnType']> => {
 	return useModalStore.getState().openModal(modalToOpen, data, options);
 };
 
